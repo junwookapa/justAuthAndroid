@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">TestApp</string>
+    
+    <!-- Strings related to login -->
+    <string name="prompt_email">이메일</string>
+    <string name="prompt_password">패스워드 (optional)</string>
+    <string name="action_sign_in">회원가입을 하시겠습니까?</string>
+    <string name="action_sign_in_short">회원가입</string>
+    <string name="error_invalid_email">올바르지 않은 이메일 주소입니다.</string>
+    <string name="error_invalid_password">비밀번호가 너무 짧습니다.</string>
+    <string name="error_incorrect_password">비밀번호가 틀렸습니다.</string>
+    <string name="error_field_required">항목이 비었습니다.</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+</resources>
