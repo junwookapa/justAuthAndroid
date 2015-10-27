@@ -29,9 +29,6 @@ public class Communication {
         String result = "";
         try {
             HttpGet httpGetRequest = new HttpGet(url);
-           // BasicHttpParams params = new BasicHttpParams();
-           // params.setParameter();
-        //    httpGetRequest.setParams(params);
             HttpResponse httpResponse = httpClient.execute(httpGetRequest);
             result = getResult(httpResponse);
         }catch(Exception e) {

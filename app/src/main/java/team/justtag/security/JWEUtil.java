@@ -64,14 +64,14 @@ public class JWEUtil {
 		}
 	}
 
-	public String encoding(JSONObject json){
+	public String encoding(JSONObject json, String id, String password){
 		try {
 			RSAPublicKeySpec publickKey = new RSAPublicKeySpec(BigEndianBigInteger.fromBase64Url(json.get("n").toString()), BigEndianBigInteger.fromBase64Url(json.get("e").toString()));
 			JSONObject jsonObj = new JSONObject();
 			KeyFactory fact = KeyFactory.getInstance("RSA");
 			fact.generatePublic(publickKey);
-			jsonObj.put("user_id", "admin");
-			jsonObj.put("user_password", "admin");
+			jsonObj.put("user_id", id);
+			jsonObj.put("user_password", password);
 			System.out.println();
 			return new JWEUtil().encoder(fact.generatePublic(publickKey), jsonObj.toJSONString());
 		}catch(NoSuchAlgorithmException e){

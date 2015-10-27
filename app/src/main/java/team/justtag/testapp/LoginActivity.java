@@ -24,6 +24,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jose4j.json.internal.json_simple.parser.JSONParser;
 import org.jose4j.json.internal.json_simple.parser.ParseException;
@@ -149,12 +150,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return email.length() > 1;
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 1;
     }
 
     /**
@@ -251,21 +252,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
-        private final String mEmail;
+        private final String mID;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        UserLoginTask(String id, String password) {
+            mID = id;
             mPassword = password;
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
             Communication conn = new Communication();
-            String string = conn.key("http://192.168.10.40:8080/key");
+            String string = conn.key("http://justauth-junwookapa.rhcloud.com/key");
             JSONParser jsonParser = new JSONParser();
             org.jose4j.json.internal.json_simple.JSONObject json = null;
             try {
@@ -276,37 +277,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }catch(ParseException e){
 
             }
-            String encodingString = new JWEUtil().encoding(json);
-            Log.i("encodingsTRING", "encodingsTRING"+encodingString);
-            String string2 = conn.login("http://192.168.10.40:8080/login", encodingString);
-            Log.i("123123123", "login?"+string2);
+            String encodingString = new JWEUtil().encoding(json, mID, mPassword);
+            String string2 = conn.login("http://justauth-junwookapa.rhcloud.com/login", encodingString);
 
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
-                return false;
+                return string2;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
 
             // TODO: register the new account here.
-            return true;
+            return string2;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(String value) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-               // finish();
+            if (value != null) {
+                Toast.makeText(LoginActivity.this, value, Toast.LENGTH_SHORT).show();
 
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
